@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
   // res.send('<h1>Hello Express!</h1>');
   res.render('home.hbs', {
     pageTitle: 'Home Page',
-    welcomeMessage: 'Welcome to my site'
+    welcomeMessage: 'Welcome to the site fam'
   });
 });
 
