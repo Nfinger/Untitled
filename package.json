@@ -7,10 +7,21 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
+  "engines": {
+    "node": "8.4.0"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.0",
     "express": "^4.14.0",
-    "hbs": "^4.0.0"
+    "hbs": "^4.0.0",
+    "mongodb": "^2.2.31",
+    "mongoose": "^4.11.10"
+  },
+  "devDependencies": {
+    "expect": "^1.20.2",
+    "mocha": "^3.0.2",
+    "supertest": "^2.0.0"
   }
 }
