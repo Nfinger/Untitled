@@ -1,8 +1,10 @@
+require('./config/config');
+
 const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
-// Configure port to use heroku's env variable on hosting and 3000 on local
-const port = process.env.PORT || 3000;
+// Configure port to use
+const port = process.env.PORT;
 
 var app = express();
 
