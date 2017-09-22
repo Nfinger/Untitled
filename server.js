@@ -3,14 +3,20 @@ require('./config/config');
 const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
+const bodyParser = require('body-parser');
+const _ = require('lodash');
+
+var {mongoose} = require('./config/mongoose');
+var {User} = require('./app/models/user');
 // Configure port to use
 const port = process.env.PORT;
-
 var app = express();
 
 hbs.registerPartials(__dirname + '/views/partials');
 // __dirname fetches the system path to project folder
 app.set('view engine', 'hbs');
+
+app.use(bodyParser.json());
 
 // Create a server log middleware\
 app.use((req, res, next) => {
@@ -64,6 +70,21 @@ app.get('/bad', (req, res) => {
   });
 });
 
+// POST /user
+app.post('/user', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+  var user = new User(body);
+  
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth', token).send(user);
+  }).catch((e) => {
+    res.status(400).send(e);
+  });
+});
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`);
 });
+
+module.exports = {app};
