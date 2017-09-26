@@ -8,6 +8,7 @@ const _ = require('lodash');
 
 var {mongoose} = require('./config/mongoose');
 var {User} = require('./app/models/user');
+var {authenticate} = require ('./app/middleware/authenticate');
 // Configure port to use
 const port = process.env.PORT;
 var app = express();
@@ -74,7 +75,7 @@ app.get('/bad', (req, res) => {
 app.post('/user', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
   var user = new User(body);
-  
+
   user.save().then(() => {
     return user.generateAuthToken();
   }).then((token) => {
@@ -83,6 +84,12 @@ app.post('/user', (req, res) => {
     res.status(400).send(e);
   });
 });
+
+app.get('/user/me', authenticate, (req, res) => {
+  res.send(req.user);
+});
+
+
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`);
 });
