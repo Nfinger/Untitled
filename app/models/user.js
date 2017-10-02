@@ -77,6 +77,34 @@ UserSchema.statics.findByToken = function (token) {
     'tokens.access': 'auth'
   });
 };
+/**
+* findByCredentials
+* Returns a user instance if login is valid
+* @param email String client provided email
+* @param password String client provided plaintext password
+* @return User returns instance of matching user
+*/
+UserSchema.statics.findByCredentials = function (email, password) {
+  var User = this;
+
+  return User.findOne({email}).then((user) => {
+    if (!user) {
+      // trigger catch in calling promise
+      return Promise.reject();
+    }
+
+    return new Promise((resolve, reject) => {
+      // compare passwords
+      bcrypt.compare(password, user.password, (err, res) => {
+        if (res) {
+          resolve(user);
+        } else {
+          reject();
+        }
+      });
+    });
+  });
+};
 
 UserSchema.pre('save', function (next) {
   var user = this;
