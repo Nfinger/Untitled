@@ -25,32 +25,30 @@ beforeEach((done) => {
 });
 
 
-describe('Routes', () => {
-  describe('Post /user', () => {
-    it('should create a new user', (done) => {
-      var newUser = {
-        email: 'kevin@gmail.com',
-        password: 'testpaswword'
-      };
-      request(app)
-        .post('/user')
-        .send(newUser)
-        .expect(200)
-        .expect((res) => {
-          expect(res.body.email).toBe(send.email);
-        })
-        .end((err, res) => {
-        if (err) {
-          return done(err);
-        }
+describe('Post /user', () => {
+  it('should create a new user', (done) => {
+    var newUser = {
+      email: 'kevin@gmail.com',
+      password: 'testpaswword'
+    };
+    request(app)
+      .post('/user')
+      .send(newUser)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.email).toBe(send.email);
+      })
+      .end((err, res) => {
+      if (err) {
+        return done(err);
+      }
 
-        // Verify our post request was actually added to database
-        User.find(newUser).then((res) => {
-          expect(res.length).toBe(1);
-          expect(res[0].email).toBe(newUser.email);
-          done();
-        }).catch((e) => done(e));
-      });
+      // Verify our post request was actually added to database
+      User.find(newUser).then((res) => {
+        expect(res.length).toBe(1);
+        expect(res[0].email).toBe(newUser.email);
+        done();
+      }).catch((e) => done(e));
     });
   });
 });

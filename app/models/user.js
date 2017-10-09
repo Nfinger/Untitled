@@ -45,7 +45,7 @@ UserSchema.methods.toJSON = function () {
 UserSchema.methods.generateAuthToken = function () {
   var user = this;
   var access = 'auth';
-  var token = jwt.sign({_id: user._id.toHexString(), access}, 'abcdefg').toString();
+  var token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
   // User ES6 syntax to assign access and token values to user doc
   user.tokens.push({access, token});
 
@@ -65,7 +65,7 @@ UserSchema.statics.findByToken = function (token) {
 
   try {
     // Try to validate user
-    decoded = jwt.verify(token, 'abcdefg');
+    decoded = jwt.verify(token, process.env.JWT_SECRET);
   } catch (e) {
     // Reject if validation fails
     return Promise.reject();
