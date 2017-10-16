@@ -9,6 +9,7 @@ const _ = require('lodash');
 var {mongoose} = require('./config/mongoose');
 var {User} = require('./app/models/user');
 var {authenticate} = require ('./app/middleware/authenticate');
+var UserRoutes = require('./app/routes/users');
 // Configure port to use
 const port = process.env.PORT;
 var app = express();
@@ -71,38 +72,7 @@ app.get('/bad', (req, res) => {
   });
 });
 
-// POST /user
-app.post('/user', (req, res) => {
-  var body = _.pick(req.body, ['email', 'password']);
-  var user = new User(body);
-
-  user.save().then(() => {
-    return user.generateAuthToken();
-  }).then((token) => {
-    res.header('x-auth', token).send(user);
-  }).catch((e) => {
-    res.status(400).send(e);
-  });
-});
-
-app.get('/user/me', authenticate, (req, res) => {
-  res.send(req.user);
-});
-
-// Login route
-app.post('/user/login', (req, res) => {
-  var body = _.pick(req.body, ['email', 'password']);
-  // Try and validate provided user credentials
-  User.findByCredentials(body.email, body.password).then((user) => {
-    return user.generateAuthToken().then((token) => {
-      // Set new x-auth token and return the user
-      res.header('x-auth', token).send(user);
-    });
-  }).catch((e) => {
-    res.status(400).send();
-  });
-});
-
+UserRoutes(app);
 
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`);
